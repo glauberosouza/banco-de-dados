@@ -41,3 +41,45 @@ VALUES
     ('São Paulo', 'SP', 'SUDESTE',5.10),
     ('Sergipe', 'SE', 'NORDESTE',0.29),
     ('Tocantins', 'TO', 'NORTE',0.55);
+    
+     --QUERIES
+    -- SELECIONE TODOS OS VALORES DA TABELA ESTADOS
+        SELECT * FROM estado;
+    -- SELECIONE APENAS OS NOMES E SIGLAS DE TODOS OS ESTADOS
+        SELECT nome, sigla FROM estado;
+    -- SELECIONE O NOME DE TODOS OS ESTADOS, PORÉM NA RESPOSTA A COLUNA NOME DEVE SER CHAMAR NOME DO ESTADO
+    	SELECT nome AS 'NOME DO ESTADO' FROM estado;
+    -- SELECIONE TODOS OS ESTADOS QUE PERTENCEM A REGIÃO NORDESTE
+    	SELECT * FROM estado WHERE regiao = 'NORDESTE';
+    -- SELECIONE TODOS OS ESTADOS CUJA A POPULAÇÃO SEJA MAIOR QUE 10 MILHÕES
+    	SELECT * FROM estado WHERE populacao > 5;
+    -- SELECIONE TODOS OS ESTADOS CUJA A POPULAÇÃO SEJA MAIOR QUE 10 MILHÕES EXIBINDO EM ORDEM CRESCENTE
+    	SELECT * FROM estado WHERE populacao > 1 ORDER BY populacao ASC;
+
+    --UPDATE and SET
+    UPDATE estado SET nome  = 'Maranhão' WHERE nome = 'Maranhao';
+	UPDATE	estado SET nome = 'Paraná', populacao = 11.08 WHERE nome = 'Parana';
+	-- DELETE
+	DELETE FROM estado WHERE nome = 'Veneza';
+
+    -- QUERY
+	 SELECT
+     	regiao AS 'Região',
+    	SUM(populacao) AS 'Total'
+     FROM
+     	estado
+     GROUP BY
+     	regiao
+     ORDER BY total DESC;
+
+    SELECT AVG(populacao) AS 'Média' FROM estado;
+
+    -- CREATED A NEW TABLE
+    CREATE TABLE cidade (
+    	idt INT UNSIGNED NOT NULL AUTO_INCREMENT,
+        nome VARCHAR(255) NOT NULL,
+        area DECIMAL(8,2),
+        idt_estado INT UNSIGNED NOT NULL,
+    	PRIMARY KEY(idt),
+        FOREIGN KEY(idt_estado) REFERENCES estado(idt)
+    );
