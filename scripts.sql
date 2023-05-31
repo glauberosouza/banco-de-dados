@@ -83,3 +83,25 @@ VALUES
     	PRIMARY KEY(idt),
         FOREIGN KEY(idt_estado) REFERENCES estado(idt)
     );
+    
+ -- QUERY IN 2 TABLES AT THE SAME TIME
+SELECT
+	c.nome AS 'Cidade', e.nome AS 'Estado', regiao AS 'Região'
+FROM
+	estado e JOIN cidade c ON e.idt = c.idt_estado;
+
+    -- CREATED A NEW TABLE prefeito
+CREATE TABLE prefeito(
+	idt INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(225) NOT NULL,
+    idt_cidade INT UNSIGNED,
+    PRIMARY KEY(idt),
+    FOREIGN KEY(idt_cidade) REFERENCES cidade(idt),
+    UNIQUE(idt_cidade)
+);
+
+     -- ADDING prefeitos TO cidades
+INSERT INTO prefeito(nome, idt_cidade)
+VALUES ('Lula', (SELECT idt FROM cidade WHERE nome='Jacarei')),
+	   ('Bolsonaro', (SELECT idt FROM cidade WHERE nome='Caldas Novas')),
+       ('Putin', null);
