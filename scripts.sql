@@ -90,7 +90,7 @@ SELECT
 FROM
 	estado e JOIN cidade c ON e.idt = c.idt_estado;
 
-    -- CREATED A NEW TABLE prefeito
+  -- CREATED A NEW TABLE prefeito
 CREATE TABLE prefeito(
 	idt INT UNSIGNED NOT NULL AUTO_INCREMENT,
     nome VARCHAR(225) NOT NULL,
@@ -104,4 +104,80 @@ CREATE TABLE prefeito(
 INSERT INTO prefeito(nome, idt_cidade)
 VALUES ('Lula', (SELECT idt FROM cidade WHERE nome='Jacarei')),
 	   ('Bolsonaro', (SELECT idt FROM cidade WHERE nome='Caldas Novas')),
-       ('Putin', null);
+       ('Putin', null);  
+       
+-- QUERY WITH (INNER JOIN), (LEFT JOIN), (RIGHT JOIN) AND (UNION).
+SELECT
+	*
+FROM
+	cidade c INNER JOIN prefeito p ON c.idt = p.idt_cidade;
+
+SELECT
+	*
+FROM
+	cidade c LEFT JOIN prefeito p ON c.idt = p.idt_cidade;
+
+SELECT
+	*
+FROM
+	cidade c RIGHT JOIN prefeito p ON c.idt = p.idt_cidade;
+
+SELECT
+	*
+FROM cidade c LEFT JOIN prefeito p ON c.idt = p.idt_cidade
+	UNION
+SELECT
+	*
+FROM cidade c RIGHT JOIN prefeito p ON c.idt = p.idt_cidade;
+
+-- CREATE A TABLE IF IS NOT EXISTS.
+CREATE TABLE IF NOT EXISTS empresa(
+	idt INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(225) NOT NULL,
+    cnpj VARCHAR(14) NOT NULL ,
+    PRIMARY KEY(idt),
+    UNIQUE KEY(cnpj)
+);
+
+-- CREATE AN INTERMEDIATE TABLE FOR TWO OTHER TABLES.
+CREATE TABLE IF NOT EXISTS cidade_empresa(
+    idt_cidade INT UNSIGNED NOT NULL,
+    idt_empresa INT UNSIGNED NOT NULL,
+    sede TINYINT(1) NOT NULL,
+    PRIMARY KEY(idt_cidade, idt_empresa)
+);
+
+ INSERT INTO
+    empresa (nome, cnpj)
+
+ VALUES
+    ('DELL','77777777777777'),
+    ('APPLE','88888888888888'),
+    ('MAGALU','66666666666666');
+
+
+INSERT INTO
+	cidade_empresa (idt_cidade, idt_empresa, sede)
+VALUES
+    (1, 1, 0),
+    (1, 2, 0),
+    (2, 2, 1),
+    (3, 3, 0);
+
+-- CREATE A QUERY TO SHOW ALL COMPANIES WITH THE NAMES OF THEIR RESPECTIVE CITIES.
+SELECT
+    e.nome, c.nome
+FROM
+    cidade_empresa AS ce
+    JOIN cidade AS c ON ce.idt_cidade = c.idt
+    JOIN empresa AS e ON ce.idt_empresa = e.idt;
+
+-- CREATE A QUERY TO SHOW ALL COMPANIES WITH THE NAMES OF THEIR RESPECTIVE CITIES, BUT ONLY COMPANIES WITH (SEDE).
+SELECT
+    e.nome, c.nome
+FROM
+    cidade_empresa AS ce
+    JOIN cidade AS c ON ce.idt_cidade = c.idt
+    JOIN empresa AS e ON ce.idt_empresa = e.idt
+    WHERE sede=1;
+       
